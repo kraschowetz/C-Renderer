@@ -4,7 +4,7 @@
 Engine *create_engine() {
 	Engine *self = (Engine*) malloc(sizeof(Engine));
 
-	self->canvas = create_canvas(800, 600);
+	self->canvas = create_canvas(400, 300);
 	self->running = false;
 
 	return self;

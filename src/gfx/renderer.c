@@ -1,5 +1,6 @@
 #include "renderer.h"
 #include "gfx.h"
+#include "quad.h"
 #include "triangle.h"
 
  Renderer *create_renderer(SDL_Window *window) {
@@ -40,9 +41,28 @@
 		0.0, 0.0, 1.0
 	};
 
+	GLfloat quad_vec_pos[12] = {
+		-0.5, 0.0, 0.0,
+		0.0, 0.0, 0.0,
+		0.0, 0.5, 0.0,
+		-0.5, 0.5, 0.0
+	};
+
+	GLfloat quad_vec_color[12] = {
+		1.0, 0.0, 0.0,
+		0.0, 1.0, 0.0,
+		0.0, 0.0, 1.0,
+		1.0, 1.0, 1.0
+	};
+
 	self->tri = create_triangle(
 		tri_vec_pos,
 		tri_vec_color
+	);
+
+	self->quad = create_quad(
+		quad_vec_pos,
+		quad_vec_color
 	);
 
 	self->shader = create_shader(
@@ -74,7 +94,7 @@ void renderer_prepare() {
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_CULL_FACE);
 	
-	glViewport(0,0, 800, 600);
+	glViewport(0,0, 400, 300);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
@@ -82,7 +102,7 @@ void renderer_prepare() {
 
 void render(Renderer *self, SDL_Window *window) {
 	renderer_prepare();
-	
+
 	mat4 model = {
 		{1, 0, 0, 0},
 		{0, 1, 0, 0},
@@ -90,13 +110,13 @@ void render(Renderer *self, SDL_Window *window) {
 		{0, 0, 0, 1}
 	};
 
-	vec3 scale = {1.0, 1.0, 1.0};
+	vec3 scale = {1.5, 1.5, 1.5};
 	
 	mat4 rotation_matrix;
-	glm_rotate_z(model, radians(self->time * 60.0f), rotation_matrix); // should use glm_rotate_at();
+	glm_rotate_y(model, radians(self->time * 60.0f), rotation_matrix); // should use glm_rotate_at();
 	
 	mat4 translation_matrix;
-	glm_translate_to(model, (vec3){0.0, 0.0, sinf(self->time) - 1.1f}, translation_matrix);
+	glm_translate_to(model, (vec3){0.0, 0.0, -1.0f}, translation_matrix);
 	
 	mat4 scale_matrix;
 	glm_scale_to(model, scale, scale_matrix);
@@ -105,7 +125,16 @@ void render(Renderer *self, SDL_Window *window) {
 	glm_mat4_mulN((mat4 *[]){&model, &translation_matrix, &rotation_matrix, &scale_matrix}, 4, model);
 	
 	mat4 perspective_matrix;
-	glm_perspective(degrees(45), 800.0f/600.0f, NEAR_PLANE, FAR_PLANE, perspective_matrix);
+	glm_perspective(degrees(45), 400.0f/300.0f, NEAR_PLANE, FAR_PLANE, perspective_matrix);
+
+	//ibo
+	/* u32 ibo; */
+	/* u32 ibo_id[6] = {0, 1, 2, 2, 1, 3}; */
+	/* glGenBuffers(1, &ibo); */
+	/* glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo); */
+	/* glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(u32), ibo_id, GL_STATIC_DRAW); */
+	/*  */
+	/* glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); */
 
 	shader_bind(&self->shader);
 	shader_uniform_float(&self->shader, "time", 0);
@@ -113,6 +142,7 @@ void render(Renderer *self, SDL_Window *window) {
 	shader_uniform_mat4(&self->shader, "u_perspective", perspective_matrix);
 
 	triangle_render(self->tri);
+	quad_render(self->quad);
 
 	SDL_GL_SwapWindow(window);
 
