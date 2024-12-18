@@ -5,7 +5,7 @@
 #include "../gfx/canvas.h"
 
 typedef struct {
-	Canvas *canvas;
+	Canvas canvas;
 	bool running;
 	f32 delta;
 	u32 frames;

@@ -1,8 +1,8 @@
 #include "renderer.h"
 
- Renderer *create_renderer(SDL_Window *window) {
+ Renderer create_renderer(SDL_Window *window) {
 
-	Renderer *self = (Renderer*) malloc(sizeof(Renderer));
+	Renderer self;
 
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
@@ -10,8 +10,8 @@
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 
-	self->context = SDL_GL_CreateContext(window);
-	if(!self->context) {
+	self.context = SDL_GL_CreateContext(window);
+	if(!self.context) {
 		fprintf(stderr, "failed to init OpenGL!\n");
 		exit(1);
 	}
@@ -52,22 +52,22 @@
 		1.0, 1.0, 1.0
 	};
 
-	self->tri = create_triangle(
+	self.tri = create_triangle(
 		tri_vec_pos,
 		tri_vec_color
 	);
 
-	self->quad = create_quad(
+	self.quad = create_quad(
 		quad_vec_pos,
 		quad_vec_color
 	);
 
-	self->shader = create_shader(
+	self.shader = create_shader(
 		"./res/2d.vert",
 		"./res/2d.frag"
 	);
 
-	self->time = 0.0;
+	self.time = 0.0;
 
 	printf(
 		"vendor:\t\t%s\nrenderer:\t%s\nversion:\t%s\nlang_version:\t%s\n",
@@ -83,8 +83,6 @@
 void destroy_renderer(Renderer *self) {
 	destroy_triangle(self->tri);
 	destroy_shader(&self->shader);
-	free(self);
-	self = NULL;
 }
 
 void renderer_prepare() {

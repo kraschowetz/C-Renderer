@@ -16,7 +16,7 @@ typedef struct{
 	f32 time;
 } Renderer;
 
-Renderer *create_renderer(SDL_Window *window);
+Renderer create_renderer(SDL_Window *window);
 void destroy_renderer(Renderer *self);
 void render_prepare(void);
 void render(Renderer *self, SDL_Window *window);

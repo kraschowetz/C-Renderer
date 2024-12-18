@@ -8,12 +8,9 @@ Quad *create_quad(GLfloat position[12], GLfloat color[12]) {
 	self->vbo = create_vbo(GL_ARRAY_BUFFER);
 	vbo_bind(&self->vbo);
 
-	GLuint vbo_data_ids[2] = {0, 1};
-
 	vbo_buffer(&self->vbo, (void*)position, 0, sizeof(GLfloat) * 12);
 	vao_attr(&self->vao, &self->vbo, 0, 3, GL_FLOAT, 0, 0);
 	
-	//is this needed?
 	self->vbo = create_vbo(GL_ARRAY_BUFFER);
 	vbo_bind(&self->vbo);
 

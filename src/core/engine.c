@@ -11,9 +11,9 @@ Engine *create_engine() {
 }
 
 void engine_stop(Engine *self) {
-	destroy_canvas(self->canvas);
-	free(self);
+	destroy_canvas(&self->canvas);
 
+	free(self);
 	self = NULL;
 }
 
@@ -37,8 +37,8 @@ void engine_start(Engine *self) {
 	while(self->running) {
 		poll_events(self);
 
-		self->canvas->renderer->time = (f32)(timer_get_ticks(&timer) / 1000.0);
-		canvas_render(self->canvas);
+		self->canvas.renderer.time = (f32)(timer_get_ticks(&timer) / 1000.0);
+		canvas_render(&self->canvas);
 
 		self->delta = (f32)(timer_get_ticks(&delta_timer) / 1000.0);
 		self->frames++;
