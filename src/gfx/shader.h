@@ -11,8 +11,8 @@ typedef struct {
 
 Shader create_shader(const char *vertex, const char *fragment);
 void destroy_shader(Shader *self);
-void shader_bind(Shader *self);
-void shader_uniform_float(Shader *self, const char *name, f32 val);
-void shader_uniform_mat4(Shader *self, const char *name, mat4 m);
+void shader_bind(const Shader *self);
+void shader_uniform_float(const Shader *self, const char *name, f32 val);
+void shader_uniform_mat4(const Shader *self, const char *name, mat4 m);
 
 #endif

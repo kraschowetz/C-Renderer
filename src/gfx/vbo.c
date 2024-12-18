@@ -7,15 +7,15 @@
 	return self;
 }
 
-void destroy_vbo(VBO *self) {
+void destroy_vbo(const VBO *self) {
 	glDeleteBuffers(1, &self->handle);
 }
 
-void vbo_bind(VBO *self) {
+void vbo_bind(const VBO *self) {
 	glBindBuffer(self->type, self->handle);
 }
 
-void vbo_buffer(VBO *self, void *data, GLsizeiptr offset, GLsizeiptr count) {
+void vbo_buffer(const VBO *self, const void *data, GLsizeiptr offset, GLsizeiptr count) {
 	vbo_bind(self);
 	glBufferData(self->type, count - offset, data, GL_STATIC_DRAW);
 }

@@ -11,12 +11,12 @@ void destroy_vao(VAO *self) {
 	glDeleteVertexArrays(1, &self->handle);
 }
 
-void vao_bind( VAO *self) {
+void vao_bind(const VAO *self) {
 	m_gl_check(glBindVertexArray(self->handle));
 }
 
 void vao_attr(
-	 VAO *self, VBO *vbo, GLuint index, GLint size, 
+	const VAO *self, const VBO *vbo, GLuint index, GLint size, 
 	GLenum type, GLsizei stride, size_t offset) {
 	
 	vao_bind(self);
@@ -52,15 +52,8 @@ void vao_attr(
 	}
 }
 
-void vao_disable_attr(VAO *self, GLuint *ids, size_t id_count) {
+void vao_disable_attr(const VAO *self, const GLuint *ids, size_t id_count) {
 	vao_bind(self);
-	for(u64 i = 0; i < id_count; i++) {
-		glDisableVertexAttribArray(ids[i]);
-	}
-}
-
-void vao_flush_attr(GLuint *ids, size_t id_count) {
-	glBindVertexArray(0);
 	for(u64 i = 0; i < id_count; i++) {
 		glDisableVertexAttribArray(ids[i]);
 	}

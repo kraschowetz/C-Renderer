@@ -1,6 +1,4 @@
 #include "shader.h"
-#include "gfx.h"
-#include <stdio.h>
 
 static void _log_err(
 	GLuint handle, const char *adverb, const char *path,
@@ -81,7 +79,7 @@ static GLuint _compile(const char *path, GLenum type) {
 	return self;
 };
 
-void shader_bind(Shader *self) {
+void shader_bind(const Shader *self) {
 	glUseProgram(self->handle);
 }
 
@@ -91,12 +89,12 @@ void destroy_shader(Shader *self) {
 	glDeleteShader(self->vertex_shader);
 }
 
-void shader_uniform_float( Shader *self, const char *name, f32 val) {
+void shader_uniform_float(const Shader *self, const char *name, f32 val) {
 	GLint location = glGetUniformLocation(self->handle, name);
 	glUniform1f(location, val);
 }
 
-void shader_uniform_mat4(Shader *self, const char *name, mat4 m) {
+void shader_uniform_mat4(const Shader *self, const char *name, mat4 m) {
 	GLint location = glGetUniformLocation(self->handle, name);
 	glUniformMatrix4fv(location, 1, GL_FALSE, (const GLfloat*) &m[0][0]);
 }

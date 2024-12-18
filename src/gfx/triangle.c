@@ -19,12 +19,10 @@
 	vbo_buffer(&self->vbo, (void*)vert_color, 0, sizeof(GLfloat) * 9);
 	vao_attr(&self->vao, &self->vbo, 1, 3, GL_FLOAT, 0, 0);
 	
-	vao_flush_attr(vbo_data_ids, 2);
-
 	return self;
 }
 
-void destroy_triangle( Triangle *self) {
+void destroy_triangle(Triangle *self) {
 	destroy_vao(&self->vao);
 	destroy_vbo(&self->vbo);
 
@@ -32,7 +30,7 @@ void destroy_triangle( Triangle *self) {
 	self = NULL;
 }
 
-void triangle_render( Triangle *self) {
+void triangle_render(const Triangle *self) {
 	vao_bind(&self->vao);
 	glDrawArrays(
 		GL_TRIANGLES,

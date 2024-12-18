@@ -1,7 +1,4 @@
 #include "renderer.h"
-#include "gfx.h"
-#include "quad.h"
-#include "triangle.h"
 
  Renderer *create_renderer(SDL_Window *window) {
 
@@ -126,15 +123,6 @@ void render(Renderer *self, SDL_Window *window) {
 	
 	mat4 perspective_matrix;
 	glm_perspective(degrees(45), 400.0f/300.0f, NEAR_PLANE, FAR_PLANE, perspective_matrix);
-
-	//ibo
-	/* u32 ibo; */
-	/* u32 ibo_id[6] = {0, 1, 2, 2, 1, 3}; */
-	/* glGenBuffers(1, &ibo); */
-	/* glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo); */
-	/* glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(u32), ibo_id, GL_STATIC_DRAW); */
-	/*  */
-	/* glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); */
 
 	shader_bind(&self->shader);
 	shader_uniform_float(&self->shader, "time", 0);

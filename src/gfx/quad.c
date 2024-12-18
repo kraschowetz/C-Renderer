@@ -1,5 +1,4 @@
 #include "quad.h"
-#include "vao.h"
 
 Quad *create_quad(GLfloat position[12], GLfloat color[12]) {
 	Quad *self = (Quad*)malloc(sizeof(Quad));
@@ -21,8 +20,6 @@ Quad *create_quad(GLfloat position[12], GLfloat color[12]) {
 	vbo_buffer(&self->vbo, (void*)color, 0, sizeof(GLfloat) * 12);
 	vao_attr(&self->vao, &self->vbo, 1, 3, GL_FLOAT, 0, 0);
 
-	vao_flush_attr(vbo_data_ids, 2);
-
 	return self;
 }
 
@@ -34,7 +31,7 @@ void destroy_quad(Quad *self) {
 	self = NULL;
 }
 
-void quad_render(Quad *self) {
+void quad_render(const Quad *self) {
 	vao_bind(&self->vao);
 
 	GLuint ids[6] = GFX_QUAD_RENDERING_ORDER;

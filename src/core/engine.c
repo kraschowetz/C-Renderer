@@ -32,6 +32,7 @@ void engine_start(Engine *self) {
 	self->running = true;
 	Timer delta_timer = timer_start();
 	Timer timer = timer_start();
+	f32 last_time = 0.0f;
 
 	while(self->running) {
 		poll_events(self);
@@ -42,6 +43,12 @@ void engine_start(Engine *self) {
 		self->delta = (f32)(timer_get_ticks(&delta_timer) / 1000.0);
 		self->frames++;
 		delta_timer = timer_start();
+
+		if((f32)(timer_get_ticks(&timer) / 1000.0) > last_time) {
+			printf("%i\n", self->frames);
+			self->frames = 0;
+			last_time += 1.0f;
+		}
 	}
 
 	engine_stop(self);

@@ -13,6 +13,6 @@ typedef struct {
 
 Quad *create_quad(GLfloat position[12], GLfloat color[12]);
 void destroy_quad(Quad *self);
-void quad_render(Quad *self);
+void quad_render(const Quad *self);
 
 #endif
