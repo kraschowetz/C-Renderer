@@ -1,5 +1,8 @@
 #include "engine.h"
 #include "timer.h"
+#include "input.h"
+#include <SDL2/SDL_events.h>
+#include <stdio.h>
 
 Engine *create_engine() {
 	Engine *self = (Engine*) malloc(sizeof(Engine));
@@ -26,6 +29,8 @@ void poll_events(Engine *self) {
 			self->running = false;
 			break;
 	}
+
+	update_input_state(e);
 }
 
 void engine_start(Engine *self) {
@@ -48,6 +53,14 @@ void engine_start(Engine *self) {
 			printf("%i\n", self->frames);
 			self->frames = 0;
 			last_time += 1.0f;
+		}
+
+		if(get_key_just_released(SDLK_SPACE)) {
+			printf("apertou!\n");
+		}
+
+		if(get_mouse_button_just_pressed(1)) {
+			printf("%i\n", get_mouse_click_ammount());
 		}
 	}
 
