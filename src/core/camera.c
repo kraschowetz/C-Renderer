@@ -1,9 +1,10 @@
 #include "camera.h"
+#include "../gfx/window.h"
 
 Camera *create_camera(f32 fov) {
 	Camera *self = calloc(1, sizeof(Camera));
 	self->fov = fov;
-	self->aspect = 400.0f / 300.0f; // <- use variables
+	self->aspect = g_window.aspect;
 	self->near = 0.01f;
 	self->far = 1000.0f;
 

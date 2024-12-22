@@ -1,11 +1,11 @@
 #ifndef GFX_H
 #define GFX_H
 
-#include <SDL2/SDL.h>
 #include "../../include/glad/include/glad/glad.h"
+#include "../util/util.h"
+#include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
 #include <GL/glu.h>
-#include "../util/util.h"
 #include <cglm/cglm.h>
 #include <cglm/struct.h>
 

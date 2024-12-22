@@ -7,14 +7,15 @@
 Engine *create_engine() {
 	Engine *self = (Engine*) malloc(sizeof(Engine));
 
-	self->canvas = create_canvas(400, 300);
+	g_window = create_window("renderer", 800, 600);
+	g_window.renderer = create_renderer(g_window.sdl_window);
 	self->running = false;
 
 	return self;
 }
 
 void engine_stop(Engine *self) {
-	destroy_canvas(&self->canvas);
+	destroy_window(&g_window);
 
 	free(self);
 	self = NULL;
@@ -42,8 +43,8 @@ void engine_start(Engine *self) {
 	while(self->running) {
 		poll_events(self);
 
-		self->canvas.renderer.time = (f32)(timer_get_ticks(&timer) / 1000.0);
-		canvas_render(&self->canvas);
+		g_window.renderer.time = (f32)(timer_get_ticks(&timer) / 1000.0);
+		window_render(&g_window);
 
 		self->delta = (f32)(timer_get_ticks(&delta_timer) / 1000.0);
 		delta_time = (f32)(timer_get_ticks(&delta_timer) / 1000.0);

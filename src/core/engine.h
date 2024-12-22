@@ -2,10 +2,9 @@
 #define ENGINE_H
 
 #include "../util/util.h"
-#include "../gfx/canvas.h"
+#include "../gfx/window.h"
 
 typedef struct {
-	Canvas canvas;
 	bool running;
 	f32 delta;
 	u32 frames;

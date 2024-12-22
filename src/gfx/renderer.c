@@ -2,11 +2,8 @@
 #include "../core/input.h"
 #include "../core/timer.h"
 #include "../core/camera.h"
-#include <cglm/cam.h>
-#include <cglm/struct/vec3.h>
-#include <stdio.h>
+#include "window.h"
 
-vec3 cam;
 Camera *camera;
 
 Renderer create_renderer(SDL_Window *window) {
@@ -101,7 +98,7 @@ void renderer_prepare() {
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_CULL_FACE);
 	
-	glViewport(0,0, 400, 300);
+	glViewport(0,0, g_window.width, g_window.height);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
@@ -123,7 +120,7 @@ void render(Renderer *self, SDL_Window *window) {
 	glm_rotate_y(model, radians(self->time * 60.0f), rotation_matrix); // should use glm_rotate_at();
 	
 	mat4 translation_matrix;
-	glm_translate_to(model, cam, translation_matrix);
+	glm_translate_to(model, (vec3){0.0f, 0.0f, 0.0f}, translation_matrix);
 	
 	mat4 scale_matrix;
 	glm_scale_to(model, scale, scale_matrix);
@@ -132,7 +129,7 @@ void render(Renderer *self, SDL_Window *window) {
 	glm_mat4_mulN((mat4 *[]){&model, &translation_matrix, &rotation_matrix, &scale_matrix}, 4, model);
 	
 	mat4 perspective_matrix;
-	glm_perspective(degrees(45), 400.0f/300.0f, NEAR_PLANE, FAR_PLANE, perspective_matrix);
+	glm_perspective(degrees(45), g_window.aspect, NEAR_PLANE, FAR_PLANE, perspective_matrix);
 	
 
 	shader_bind(&self->shader);
