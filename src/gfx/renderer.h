@@ -5,6 +5,8 @@
 #include "triangle.h"
 #include "quad.h"
 
+#define VSYNC_STATE 1
+
 #define NEAR_PLANE 0.1f
 #define FAR_PLANE 10.0f
 

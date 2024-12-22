@@ -7,6 +7,7 @@
 #include <GL/glu.h>
 #include "../util/util.h"
 #include <cglm/cglm.h>
+#include <cglm/struct.h>
 
 static inline void _gl_clear_all_errors() {
 	while(glGetError() != GL_NO_ERROR) {} //:)

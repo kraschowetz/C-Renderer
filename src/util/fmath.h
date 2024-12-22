@@ -5,7 +5,9 @@
 #include <math.h>
 #include <cglm/cglm.h>
 
-#define PI GLM_PI
+#define PI ((f32)(GLM_PI))
+#define PI_2 ((f32)(GLM_PI_2))
+#define TAU (2 * PI)
 
 #define cosf(x) ((f32)(cos(x)))
 #define sinf(x) ((f32)(sin(x)))

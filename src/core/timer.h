@@ -10,4 +10,6 @@ typedef struct {
 Timer timer_start();
 u32 timer_get_ticks(Timer *self);
 
+extern f32 delta_time;
+
 #endif

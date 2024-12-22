@@ -1,6 +1,15 @@
 #include "renderer.h"
+#include "../core/input.h"
+#include "../core/timer.h"
+#include "../core/camera.h"
+#include <cglm/cam.h>
+#include <cglm/struct/vec3.h>
+#include <stdio.h>
 
- Renderer create_renderer(SDL_Window *window) {
+vec3 cam;
+Camera *camera;
+
+Renderer create_renderer(SDL_Window *window) {
 
 	Renderer self;
 
@@ -21,7 +30,7 @@
 		exit(1);
 	}
 
-	if(SDL_GL_SetSwapInterval(0) < 0) {
+	if(SDL_GL_SetSwapInterval(VSYNC_STATE) < 0) {
 		fprintf(stderr, "failed to enable vsync!\n");
 		exit(1);
 	}
@@ -77,12 +86,15 @@
 		glGetString(GL_SHADING_LANGUAGE_VERSION)
 	);
 
+	camera = create_camera(45.0f);
+
 	return self;
 }
 
 void destroy_renderer(Renderer *self) {
 	destroy_triangle(self->tri);
 	destroy_shader(&self->shader);
+	free(camera);
 }
 
 void renderer_prepare() {
@@ -111,7 +123,7 @@ void render(Renderer *self, SDL_Window *window) {
 	glm_rotate_y(model, radians(self->time * 60.0f), rotation_matrix); // should use glm_rotate_at();
 	
 	mat4 translation_matrix;
-	glm_translate_to(model, (vec3){0.0, 0.0, -1.0f}, translation_matrix);
+	glm_translate_to(model, cam, translation_matrix);
 	
 	mat4 scale_matrix;
 	glm_scale_to(model, scale, scale_matrix);
@@ -121,11 +133,13 @@ void render(Renderer *self, SDL_Window *window) {
 	
 	mat4 perspective_matrix;
 	glm_perspective(degrees(45), 400.0f/300.0f, NEAR_PLANE, FAR_PLANE, perspective_matrix);
+	
 
 	shader_bind(&self->shader);
 	shader_uniform_float(&self->shader, "time", 0);
-	shader_uniform_mat4(&self->shader, "u_model_mat", model);
-	shader_uniform_mat4(&self->shader, "u_perspective", perspective_matrix);
+	shader_uniform_mat4(&self->shader, "u_model", model);
+	shader_uniform_mat4s(&self->shader, "u_perspective", camera->view_proj.projection);
+	shader_uniform_mat4s(&self->shader, "u_view", camera->view_proj.view);
 
 	triangle_render(self->tri);
 	quad_render(self->quad);
@@ -133,4 +147,25 @@ void render(Renderer *self, SDL_Window *window) {
 	SDL_GL_SwapWindow(window);
 
 	// m_gl_check(glBindBuffer(GL_ARRAY_BUFFER, 100)); // <- teste do macro gl_check
+	
+	if(get_key_pressed(SDL_SCANCODE_LEFT))
+		camera->yaw += delta_time;
+	if(get_key_pressed(SDL_SCANCODE_RIGHT))
+		camera->yaw -= delta_time;
+	if(get_key_pressed(SDL_SCANCODE_UP))
+		camera->pitch += delta_time;
+	if(get_key_pressed(SDL_SCANCODE_DOWN))
+		camera->pitch -= delta_time;
+
+	if(get_key_pressed(SDLK_d))
+		camera->position.x -= delta_time;
+	if(get_key_pressed(SDLK_a))
+		camera->position.x += delta_time;
+	if(get_key_pressed(SDLK_w))
+		camera->position.z += delta_time;
+	if(get_key_pressed(SDLK_s))
+		camera->position.z -= delta_time;
+
+	camera_update(camera);
+
 }

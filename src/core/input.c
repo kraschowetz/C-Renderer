@@ -1,5 +1,4 @@
 #include "input.h"
-#include <SDL2/SDL_events.h>
 
 bool _key_buffer[KEY_BUFFER_SIZE] = {0};
 bool _prev_key_buffer[KEY_BUFFER_SIZE] = {0};

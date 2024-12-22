@@ -46,6 +46,7 @@ void engine_start(Engine *self) {
 		canvas_render(&self->canvas);
 
 		self->delta = (f32)(timer_get_ticks(&delta_timer) / 1000.0);
+		delta_time = (f32)(timer_get_ticks(&delta_timer) / 1000.0);
 		self->frames++;
 		delta_timer = timer_start();
 

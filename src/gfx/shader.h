@@ -14,5 +14,6 @@ void destroy_shader(Shader *self);
 void shader_bind(const Shader *self);
 void shader_uniform_float(const Shader *self, const char *name, f32 val);
 void shader_uniform_mat4(const Shader *self, const char *name, mat4 m);
+void shader_uniform_mat4s(const Shader *self, const char *name, mat4s m);
 
 #endif

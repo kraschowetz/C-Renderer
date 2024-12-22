@@ -98,3 +98,8 @@ void shader_uniform_mat4(const Shader *self, const char *name, mat4 m) {
 	GLint location = glGetUniformLocation(self->handle, name);
 	glUniformMatrix4fv(location, 1, GL_FALSE, (const GLfloat*) &m[0][0]);
 }
+
+void shader_uniform_mat4s(const Shader *self, const char *name, mat4s m) {
+	GLint location = glGetUniformLocation(self->handle, name);
+	glUniformMatrix4fv(location, 1, GL_FALSE, (const GLfloat*) &m.raw);
+}
