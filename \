@@ -6,7 +6,7 @@
 #include <SDL2/SDL_keycode.h>
 
 PerspectiveCamera *camera;
-OrthoCamera *o_camera;
+OrthographicCamera *o_camera;
 
 Renderer create_renderer(SDL_Window *window) {
 
@@ -86,7 +86,7 @@ Renderer create_renderer(SDL_Window *window) {
 	);
 
 	camera = create_perspective_camera(45.0f);
-	o_camera = create_ortho_camera((vec2s){{-1.0f, -1.0f}}, (vec2s){{10.0f, 10.0f}});
+	o_camera = create_orthografic_camera((vec2s){{0.0f, 0.0f}}, (vec2s){{10.0f, 10.0f}});
 
 	return self;
 }
@@ -144,14 +144,6 @@ void render(Renderer *self, SDL_Window *window) {
 	triangle_render(self->tri);
 	quad_render(self->quad);
 
-	/* UI pass */
-
-	shader_uniform_mat4s(&self->shader, "u_perspective", o_camera->view_proj.projection);
-	shader_uniform_mat4s(&self->shader, "u_view", o_camera->view_proj.view);
-
-	triangle_render(self->tri);
-	quad_render(self->quad);
-
 	SDL_GL_SwapWindow(window);
 
 	// m_gl_check(glBindBuffer(GL_ARRAY_BUFFER, 100)); // <- teste do macro gl_check
@@ -175,6 +167,5 @@ void render(Renderer *self, SDL_Window *window) {
 		camera->position.z -= delta_time;
 
 	perspective_camera_update(camera);
-	ortho_camera_update(o_camera);
 
 }

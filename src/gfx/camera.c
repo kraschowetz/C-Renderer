@@ -1,19 +1,24 @@
 #include "camera.h"
 #include "../gfx/window.h"
 
-Camera *create_camera(f32 fov) {
-	Camera *self = calloc(1, sizeof(Camera));
+PerspectiveCamera *create_perspective_camera(f32 fov) {
+	PerspectiveCamera *self = calloc(1, sizeof(PerspectiveCamera));
 	self->fov = fov;
 	self->aspect = g_window.aspect;
 	self->near = 0.01f;
 	self->far = 1000.0f;
 
-	camera_update(self);
+	perspective_camera_update(self);
 
 	return self;
 }
 
-void camera_update(Camera *self) {
+void destroy_perspective_camera(PerspectiveCamera *self) {
+	free(self);
+	self = NULL;
+}
+
+void perspective_camera_update(PerspectiveCamera *self) {
 	self->pitch = clamp(self->pitch, -PI_2, PI_2);
 	self->yaw = (self->yaw < 0 ? TAU : 0.0f) + fmodf(self->yaw, TAU);
 	
@@ -37,5 +42,28 @@ void camera_update(Camera *self) {
 		self->aspect,
 		self->near,
 		self->far
+	);
+}
+
+OrthoCamera *create_ortho_camera(vec2s min, vec2s max) {
+	OrthoCamera *self = calloc(1, sizeof(OrthoCamera));
+
+	self->min = min;
+	self->max = max;
+
+	ortho_camera_update(self);
+
+	return self;
+}
+
+void ortho_camera_update(OrthoCamera *self) {
+	self->view_proj.view = glms_mat4_identity();
+	self->view_proj.projection = glms_ortho(
+		self->min.x,
+		self->max.x,
+		self->min.y,
+		self->max.y,
+		-10.0f,
+		10.f
 	);
 }
