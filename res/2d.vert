@@ -12,11 +12,20 @@ out vec3 vertex_color;
 
 void main() {
 	
+	const float time_cut_point = 0.75;
+	const float time_multiplier = 1.65;
+	const float time_damp = 0.1;
+	float offset = sin(time * time_multiplier);
+	if(offset > time_cut_point) {
+		offset = time_cut_point;
+	}
+	offset *= time_damp;
+
 	vec4 _position = u_perspective * u_view * u_model * vec4(pos, 1.0f);
 
 	gl_Position = vec4(
 		_position.x,
-		_position.y,
+		_position.y + offset,
 		_position.z,
 		_position.w
 	);

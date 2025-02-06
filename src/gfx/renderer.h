@@ -1,6 +1,7 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
+#include "cube.h"
 #include "shader.h"
 #include "triangle.h"
 #include "quad.h"
@@ -15,6 +16,7 @@ typedef struct{
 	Shader shader;
 	Triangle *tri;
 	Quad *quad;
+	Cube *cube;
 	f32 time;
 } Renderer;
 

@@ -11,8 +11,7 @@ Window create_window(const char *title, i32 w, i32 h) {
 	self.aspect = (f32)(w) / (f32)(h);
 
 	if(SDL_Init(SDL_INIT_EVERYTHING) < 0) {
-		fprintf(stderr, "Failed to init SDL!\n");
-		exit(1);
+		throw_err("failed to init SDL\n");
 	}
 	self.sdl_window = SDL_CreateWindow(
 		title,
@@ -24,8 +23,7 @@ Window create_window(const char *title, i32 w, i32 h) {
 	);
 
 	if(!self.sdl_window) {
-		fprintf(stderr, "Failed to init sdl_window!\n");
-		exit(1);
+		throw_err("failed to init SDL Window\n");
 	}
 
 	return self;

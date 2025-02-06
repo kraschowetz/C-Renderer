@@ -1,7 +1,7 @@
 #include "triangle.h"
 
  Triangle *create_triangle(GLfloat position[9], GLfloat vert_color[9]) {
-	 Triangle *self = (Triangle*)malloc(sizeof(Triangle));
+	Triangle *self = (Triangle*)malloc(sizeof(Triangle));
 
 	self->vao = create_vao();
 	vao_bind(&self->vao);

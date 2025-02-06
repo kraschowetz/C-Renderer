@@ -2,6 +2,7 @@
 #include "../core/input.h"
 #include "../core/timer.h"
 #include "camera.h"
+#include "cube.h"
 #include "window.h"
 #include <SDL2/SDL_keycode.h>
 
@@ -20,18 +21,15 @@ Renderer create_renderer(SDL_Window *window) {
 
 	self.context = SDL_GL_CreateContext(window);
 	if(!self.context) {
-		fprintf(stderr, "failed to init OpenGL!\n");
-		exit(1);
+		throw_err("failed to init OpenGL\n");
 	}
 
 	if(!gladLoadGLLoader(SDL_GL_GetProcAddress)) {
-		fprintf(stderr, "failed to load OpenGL!\n");
-		exit(1);
+		throw_err("failed to load OpenGl\n");
 	}
 
 	if(SDL_GL_SetSwapInterval(VSYNC_STATE) < 0) {
-		fprintf(stderr, "failed to enable vsync!\n");
-		exit(1);
+		throw_err("failed to enable vsync\n");
 	}
 
 	GLfloat tri_vec_pos[9] = {
@@ -60,6 +58,28 @@ Renderer create_renderer(SDL_Window *window) {
 		1.0, 1.0, 1.0
 	};
 
+	GLfloat cube_vec_pos[36] = {
+		-1.0f, -1.0f, 1.0f, //frontface
+		1.0f, -1.0f, 1.0f,
+		1.0f, 1.0f, 1.0f,
+		-1.0f, 1.0f, 1.0f,
+		-1.0f, -1.0f, -1.0f, //backface
+		1.0f, -1.0f, -1.0f,
+		1.0f, 1.0f, -1.0f,
+		-1.0f, 1.0f, -1.0f
+	};
+
+	GLfloat cube_vec_color[36] = {
+		1.0, 0.0, 0.0, //frontface
+		1.0, 0.0, 0.0,
+		1.0, 0.0, 0.0,
+		1.0, 0.0, 0.0,
+		0.0, 0.0, 1.0, //backface
+		0.0, 0.0, 1.0,
+		0.0, 0.0, 1.0,
+		0.0, 0.0, 1.0,
+	};
+
 	self.tri = create_triangle(
 		tri_vec_pos,
 		tri_vec_color
@@ -68,6 +88,11 @@ Renderer create_renderer(SDL_Window *window) {
 	self.quad = create_quad(
 		quad_vec_pos,
 		quad_vec_color
+	);
+
+	self.cube = create_cube(
+		cube_vec_pos,
+		cube_vec_color
 	);
 
 	self.shader = create_shader(
@@ -93,13 +118,16 @@ Renderer create_renderer(SDL_Window *window) {
 
 void destroy_renderer(Renderer *self) {
 	destroy_triangle(self->tri);
+	destroy_quad(self->quad);
+	destroy_cube(self->cube);
 	destroy_shader(&self->shader);
 	free(camera);
 }
 
 void renderer_prepare() {
-	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_CULL_FACE);
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
 	
 	glViewport(0,0, g_window.width, g_window.height);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -120,7 +148,7 @@ void render(Renderer *self, SDL_Window *window) {
 	vec3 scale = {1.5, 1.5, 1.5};
 	
 	mat4 rotation_matrix;
-	glm_rotate_y(model, radians(self->time * 60.0f), rotation_matrix); // should use glm_rotate_at();
+	glm_rotate_y(model, radians(self->time * 0.0f), rotation_matrix); // should use glm_rotate_at();
 	
 	mat4 translation_matrix;
 	glm_translate_to(model, (vec3){0.0f, 0.0f, 0.0f}, translation_matrix);
@@ -136,13 +164,14 @@ void render(Renderer *self, SDL_Window *window) {
 	
 
 	shader_bind(&self->shader);
-	shader_uniform_float(&self->shader, "time", 0);
+	shader_uniform_float(&self->shader, "time", self->time);
 	shader_uniform_mat4(&self->shader, "u_model", model);
 	shader_uniform_mat4s(&self->shader, "u_perspective", camera->view_proj.projection);
 	shader_uniform_mat4s(&self->shader, "u_view", camera->view_proj.view);
 
-	triangle_render(self->tri);
-	quad_render(self->quad);
+	/* triangle_render(self->tri); */
+	/* quad_render(self->quad); */
+	cube_render(self->cube);
 
 	/* UI pass */
 
