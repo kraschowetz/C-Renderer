@@ -10,6 +10,6 @@
 #include "fmath.h"
 
 #define throw_errf(_err, ...) fprintf(stderr, _err, __VA_ARGS__); exit(1)
-#define throw_err(_err) fprintf(stderr, _err)
+#define throw_err(_err) fprintf(stderr, _err); exit(1)
 
 #endif
