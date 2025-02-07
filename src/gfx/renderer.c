@@ -21,15 +21,15 @@ Renderer create_renderer(SDL_Window *window) {
 
 	self.context = SDL_GL_CreateContext(window);
 	if(!self.context) {
-		throw_err("failed to init OpenGL\n");
+		THROW_ERR("failed to init OpenGL\n");
 	}
 
 	if(!gladLoadGLLoader(SDL_GL_GetProcAddress)) {
-		throw_err("failed to load OpenGl\n");
+		THROW_ERR("failed to load OpenGl\n");
 	}
 
 	if(SDL_GL_SetSwapInterval(VSYNC_STATE) < 0) {
-		throw_err("failed to enable vsync\n");
+		THROW_ERR("failed to enable vsync\n");
 	}
 
 	GLfloat tri_vec_pos[9] = {
@@ -148,7 +148,7 @@ void render(Renderer *self, SDL_Window *window) {
 	vec3 scale = {1.5, 1.5, 1.5};
 	
 	mat4 rotation_matrix;
-	glm_rotate_y(model, radians(self->time * 0.0f), rotation_matrix); // should use glm_rotate_at();
+	glm_rotate_y(model, DEG2RAD(self->time * 0.0f), rotation_matrix); // should use glm_rotate_at();
 	
 	mat4 translation_matrix;
 	glm_translate_to(model, (vec3){0.0f, 0.0f, 0.0f}, translation_matrix);
@@ -160,7 +160,7 @@ void render(Renderer *self, SDL_Window *window) {
 	glm_mat4_mulN((mat4 *[]){&model, &translation_matrix, &rotation_matrix, &scale_matrix}, 4, model);
 	
 	mat4 perspective_matrix;
-	glm_perspective(degrees(45), g_window.aspect, NEAR_PLANE, FAR_PLANE, perspective_matrix);
+	glm_perspective(RAD2DEG(45), g_window.aspect, NEAR_PLANE, FAR_PLANE, perspective_matrix);
 	
 
 	shader_bind(&self->shader);

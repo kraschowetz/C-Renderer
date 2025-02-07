@@ -19,7 +19,7 @@ void destroy_perspective_camera(PerspectiveCamera *self) {
 }
 
 void perspective_camera_update(PerspectiveCamera *self) {
-	self->pitch = clamp(self->pitch, -PI_2, PI_2);
+	self->pitch = CLAMP(self->pitch, -PI_2, PI_2);
 	self->yaw = (self->yaw < 0 ? TAU : 0.0f) + fmodf(self->yaw, TAU);
 	
 	self->direction = (vec3s){{
