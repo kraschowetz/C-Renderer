@@ -5,6 +5,8 @@
 #include "cube.h"
 #include "window.h"
 #include <SDL2/SDL_keycode.h>
+#include <cglm/struct/vec3.h>
+#include <math.h>
 
 PerspectiveCamera *camera;
 OrthoCamera *o_camera;
@@ -185,6 +187,8 @@ void render(Renderer *self, SDL_Window *window) {
 
 	// m_gl_check(glBindBuffer(GL_ARRAY_BUFFER, 100)); // <- teste do macro gl_check
 	
+	//cam movement
+
 	if(get_key_pressed(SDL_SCANCODE_LEFT))
 		camera->yaw += delta_time;
 	if(get_key_pressed(SDL_SCANCODE_RIGHT))
@@ -193,17 +197,34 @@ void render(Renderer *self, SDL_Window *window) {
 		camera->pitch += delta_time;
 	if(get_key_pressed(SDL_SCANCODE_DOWN))
 		camera->pitch -= delta_time;
+	
+	vec3s movement, dir, forward, right;
+	movement = GLMS_VEC3_ZERO;
+	dir = GLMS_VEC3_ZERO;
+	forward = (vec3s){{SINF(camera->yaw), 0, COSF(camera->yaw)}};
+	right = glms_vec3_cross((vec3s){{0.0f, 1.0f, 0.0f}}, forward);
 
-	if(get_key_pressed(SDLK_d))
-		camera->position.x -= delta_time;
-	if(get_key_pressed(SDLK_a))
-		camera->position.x += delta_time;
-	if(get_key_pressed(SDLK_w))
-		camera->position.z += delta_time;
-	if(get_key_pressed(SDLK_s))
-		camera->position.z -= delta_time;
+	if(get_key_pressed(SDLK_d)) {
+		dir = glms_vec3_sub(dir, right);
+	}
+	if(get_key_pressed(SDLK_a)) {
+		dir = glms_vec3_add(dir, right);
+	}
+	if(get_key_pressed(SDLK_w)) {
+		dir = glms_vec3_add(dir, forward);
+	}
+	if(get_key_pressed(SDLK_s)) {
+		dir = glms_vec3_sub(dir, forward);
+	}
+	
+	if(!isnan(glms_vec3_norm(dir))) {
+		const f32 speed = 5.0f;
+		movement = glms_normalize(dir);
+		movement = glms_vec3_scale(movement, speed * delta_time);
+	}
+
+	camera->position = glms_vec3_add(camera->position, movement);
 
 	perspective_camera_update(camera);
 	ortho_camera_update(o_camera);
-
 }

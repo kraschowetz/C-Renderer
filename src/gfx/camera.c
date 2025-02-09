@@ -56,6 +56,11 @@ OrthoCamera *create_ortho_camera(vec2s min, vec2s max) {
 	return self;
 }
 
+void destroy_ortho_camera(OrthoCamera *self) {
+	free(self);
+	self = NULL;
+}
+
 void ortho_camera_update(OrthoCamera *self) {
 	self->view_proj.view = glms_mat4_identity();
 	self->view_proj.projection = glms_ortho(

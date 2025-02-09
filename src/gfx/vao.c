@@ -12,7 +12,7 @@ void destroy_vao(VAO *self) {
 }
 
 void vao_bind(const VAO *self) {
-	m_gl_check(glBindVertexArray(self->handle));
+	GL_CHECK(glBindVertexArray(self->handle));
 }
 
 void vao_attr(

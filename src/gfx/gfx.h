@@ -22,6 +22,6 @@ static inline bool _gl_check_error_status(const char *function, u32 line) {
 	return false;
 }
 
-#define m_gl_check(x) _gl_clear_all_errors(); x; _gl_check_error_status(#x, __LINE__);
+#define GL_CHECK(x) _gl_clear_all_errors(); x; _gl_check_error_status(#x, __LINE__);
 
 #endif
