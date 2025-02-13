@@ -123,7 +123,8 @@ void destroy_renderer(Renderer *self) {
 	destroy_quad(self->quad);
 	destroy_cube(self->cube);
 	destroy_shader(&self->shader);
-	free(camera);
+	destroy_perspective_camera(camera);
+	destroy_ortho_camera(o_camera);
 }
 
 void renderer_prepare() {
